@@ -1,77 +1,6 @@
-// const url = "http://localhost:3000/api/products/";
-
-// // Récupération des données du panier depuis le stockage local
-// const cartItems = JSON.parse(localStorage.getItem("addToCart")) || [];
-
-// // Sélection de la section du panier où nous afficherons les éléments du panier
-// const cartItemsSection = document.getElementById("cart__items");
-
-// function displayShoppingCard() {
-//   // Parcours des articles du panier
-//   cartItems.forEach(async (cardItem) => {
-//     // Récupération des données du produit
-//     const product = await getProduct(cardItem.id);
-
-//     // Création de l'élément de l'article
-//     const item = { ...cardItem, imageUrl: product?.imageUrl };
-
-//     // Ajout de l'élément de l'article au DOM
-//     cartItemsSection.innerHTML += renderCardUI(item);
-//   });
-
-//   // Calculez le total et affichez-le
-//   const totalQuantityElement = document.getElementById("totalQuantity");
-//   const totalPriceElement = document.getElementById("totalPrice");
-
-//   let totalQuantity = 0;
-//   let totalPrice = 0;
-
-//   cartItems.forEach((item) => {
-//     totalQuantity += parseInt(item.quantity, 10);
-//     totalPrice += parseFloat(item.price) * parseInt(item.quantity, 10);
-//   });
-
-//   // Mettez à jour le prix total dans le DOM
-//   totalPriceElement.textContent = `${totalPrice.toFixed(2)} €`;
-// }
-
-// // Fonction pour obtenir les données du produit
-// const getProduct = async (idPruct) => {
-//   const response = await fetch(url + "/" + idPruct);
-//   const product = await response.json();
-//   return product;
-// };
-
-// // Fonction pour afficher l'interface utilisateur de l'article
-// const renderCardUI = (item) => {
-//   return `<article class="cart__item" data-id="${item.id}" data-color="${item.color}">
-//                 <div class="cart__item__img">
-//                     <img alt="Photographie de ${item.name}" src="${item.imageUrl}"/>
-//                     <div class="cart__item__content">
-//                         <div class="cart__item__content__description">
-//                             <h2>${item.name}</h2>
-//                             <p>${item.color}</p>
-//                             <p>${item.price} €</p>
-//                         </div>
-//                         <div class="cart__item__content__settings">
-//                             <div class="cart__item__content__settings__quantity">
-//                             <label>Quantité</label>
-//                             <input class="itemQuantity" type="number" name="itemQuantity" min="1" max="100" value="${item.quantity}"/>
-//                             </div>
-//                         </div>
-//                         <div class="cart__item__content__settings__delete">
-//                             <button class="deleteItem">Supprimer</button>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </article>
-//     `;
-// };
-
 // displayShoppingCard();
 
 const cart = []
-
 
 
 storageToCart();
@@ -87,8 +16,6 @@ function storageToCart() {
   console.log(cart);
 
 }
-
-
 
 
 displayCartHTML();
@@ -184,10 +111,6 @@ function updatePriceAndQuantity() {
 
 
 
-
-
-
-
 deleteItem();
 // Efface un item du panier
 function deleteItem() {
@@ -210,9 +133,6 @@ function deleteItem() {
 
 
 
-
-
-
 orderForm();
 // Au clic sur le bouton d'envoi de la commande, on vérifie que les champs sont remplis corectement et on envoie la commande au serveur
 function orderForm() {
@@ -229,6 +149,10 @@ function orderForm() {
     checkForm(firstName, lastName, email, address, city);
 
     checkEmail(email);
+
+    checkPrenom(firstName);
+
+    checkNom(lastName);
 
     makeOrder(firstName, lastName, email, address, city);
   })
@@ -279,8 +203,6 @@ function makeOrder(firstName, lastName, email, address, city) {
 
 
 
-
-
 // Vérifie que les champs ne sont pas vides
 function checkForm(firstName, lastName, email, address, city) {
   if (firstName === '' || lastName === '' || email === '' || address === '' || city === '') {
@@ -289,8 +211,23 @@ function checkForm(firstName, lastName, email, address, city) {
   }
 }
 
-
-
+// Vérifie que le prénom est valide
+function checkPrenom(firstName) {
+    const regex = /^[a-zA-Z ]+$/;
+    if (firstName != '' && !regex.test(firstName)) {
+      alert('Veuillez entrer un prénom valide');
+      throw new Error('Prenom is not valid');
+    }
+  }
+  
+  // Vérifie que le nom est valide
+  function checkNom(lastName) {
+    const regex = /^[a-zA-Z ]+$/;
+    if (lastName != '' && !regex.test(lastName)) {
+      alert('Veuillez entrer un nom valide');
+      throw new Error('Nom is not valid');
+    }
+  }
 
 // Vérifie que l'email est valide
 function checkEmail(email) {
@@ -300,3 +237,4 @@ function checkEmail(email) {
     throw new Error('Email is not valid');
   }
 }
+

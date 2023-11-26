@@ -30,66 +30,44 @@ function displayItemHTML(canape) {
 
 
 sendToStorage();
-//verification de la quantité et de la couleur puis envoi au local storage
+// Verification of quantity and color, then send to local storage
 function sendToStorage() {
-    const button = document.querySelector('#addToCart');
-    button.addEventListener('click', () => {
-      const color = document.querySelector('#colors').value;
-      const qty = document.querySelector('#quantity').value;
-      const price = document.querySelector('#price').innerHTML;
-      const name = document.querySelector('#title').innerHTML;
-      const img = document.querySelector('.item__img').innerHTML;
-      const id = productId;
-      const cart = {
-        id: id,
-        name: name,
-        price: price,
-        img: img,
-        color: color,
-        qty: qty,
-      };
-      checkRequired(color, qty)
-      const key = cart.id + "-" + cart.color;
-      console.log(cart);
-      if (localStorage.getItem(key) !== null) {
-        alert("Ce produit est déjà dans votre panier");
-      } else {
-        localStorage.setItem(key, JSON.stringify(cart));
-      }
-      window.location.href = 'index.html';
-    })
-  }
-// function sendToStorage() {
-//     const button = document.querySelector('#addToCart');
-//     button.addEventListener('click', () => {
-//       const color = document.querySelector('#colors').value;
-//       const qty = document.querySelector('#quantity').value;
-//       const price = document.querySelector('#price').innerHTML;
-//       const name = document.querySelector('#title').innerHTML;
-//       const img = document.querySelector('.item__img').innerHTML;
-//       const id = productId;
-//       const cart = {
-//         id: id,
-//         name: name,
-//         price: price,
-//         img: img,
-//         color: color,
-//         qty: qty,
-//       };
-//       checkRequired(color, qty)
-//       const key = cart.id + "-" + cart.color;
-//       console.log(cart);
-//       if (localStorage.getItem(key) !== null) {
-//         const existingCart = JSON.parse(localStorage.getItem(key));
-//         const newQty = existingCart.qty + cart.qty;
-//         existingCart.qty = newQty;
-//         localStorage.setItem(key, JSON.stringify(existingCart));
-//       } else {
-//         localStorage.setItem(key, JSON.stringify(cart));
-//       }
-//       window.location.href = 'index.html';
-//     })
-//   }  
+  const button = document.querySelector('#addToCart');
+  button.addEventListener('click', () => {
+    const color = document.querySelector('#colors').value;
+    const qty = document.querySelector('#quantity').value;
+    const name = document.querySelector('#title').innerHTML;
+    const imgElement = document.querySelector('.item__img');
+    const imgSrc = imgElement.querySelector('img').src; 
+    const id = productId;
+
+    const cartItem = {
+      id: id,
+      name: name,
+      img: imgSrc, 
+      color: color,
+      qty: qty,
+    };
+
+    checkRequired(color, qty);
+
+    const key = cartItem.id + "-" + cartItem.color;
+    console.log(cartItem);
+
+    if (localStorage.getItem(key) !== null) {
+      const existingCart = JSON.parse(localStorage.getItem(key));
+      const newQty = parseInt(existingCart.qty + cartItem.qty);
+      existingCart.qty = newQty;
+      localStorage.setItem(key, JSON.stringify(existingCart));
+    } else {
+      localStorage.setItem(key, JSON.stringify(cartItem));
+    }
+
+    window.location.href = 'index.html';
+  });
+}
+
+
 
 //verification de la couleur et de la quantité
 function checkRequired(color, qty) {

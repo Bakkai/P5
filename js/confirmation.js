@@ -3,8 +3,6 @@ displayOrderId(orderId);
 clearSessionStorage();
 
 
-
-
 //recupere l'id de la commande dans l'url
 function getOrderId() {
     const queryString = window.location.search;

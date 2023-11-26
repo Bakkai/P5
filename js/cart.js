@@ -22,112 +22,102 @@ displayCartHTML();
 //créatiion de l'article HTML en fonction des entrées de l'array cart
 function displayCartHTML() {
   const cartItems = document.getElementById('cart__items');
+ 
+
   for (let i = 0; i < cart.length; i++) {
     const item = cart[i];
+    console.log('Item in cart:', item); // Add this line for debugging
     const cartItem = document.createElement('div');
     cartItem.innerHTML = `
-    <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
-    <div class="cart__item__img">
-      <img ${item.img}
-    </div>
-    <div class="cart__item__content">
-      <div class="cart__item__content__description">
-        <h2>${item.name}</h2>
-        <p>${item.color}</p>
-        <p>${item.price}€</p>
-      </div>
-      <div class="cart__item__content__settings">
-        <div class="cart__item__content__settings__quantity">
-          <p>Quantité : </p>
-          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${item.qty}>
+      <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
+        <div class="cart__item__img">
+          <img src="${item.img}" alt="${item.name}">
         </div>
-        <div class="cart__item__content__settings__delete">
-          <p class="deleteItem">Supprimer</p>
+        <div class="cart__item__content">
+          <div class="cart__item__content__description">
+            <h2>${item.name}</h2>
+            <p>${item.color}</p>
+            <p>${item.price}€</p>
+          </div>
+          <div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity">
+              <p>Quantité : </p>
+              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.qty}">
+            </div>
+            <div class="cart__item__content__settings__delete">
+              <p class="deleteItem">Supprimer</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </article>
+      </article>
     `;
     cartItems.appendChild(cartItem);
-
   }
 
-
+  // Add event listeners after rendering cart items
+  updatePriceAndQuantity();
+  deleteItem();
 }
 
 
-
-
-
-displayTotalQuantity();
-//calcule la quantité total en fonction des entrées de l'array cart
+// Calculate and display the total quantity of items in the cart
 function displayTotalQuantity() {
   const totalqty = document.getElementById('totalQuantity');
   let total = 0;
+
   for (let i = 0; i < cart.length; i++) {
     const item = cart[i];
     total += parseFloat(item.qty);
   }
+
   totalqty.innerHTML = total;
 }
 
-
-
-
-
-
-displayTotalPrice();
-// affiche le prix total
+// Calculate and display the total price of items in the cart
 function displayTotalPrice() {
   const totalPrice = document.getElementById('totalPrice');
   let total = 0;
+
   for (let i = 0; i < cart.length; i++) {
     const item = cart[i];
     total += parseFloat(item.price) * parseFloat(item.qty);
   }
-  totalPrice.innerHTML = total;
+
+  totalPrice.innerHTML = total.toFixed(2); // Display the total price with two decimal places
 }
 
-
-
-
-
-
-updatePriceAndQuantity();
-// Modifie la quantité et le prix total d'un item après la detection d'un changement au niveau du selecteur de quantité sur l'item
+// Update quantity and total price dynamically based on user input
 function updatePriceAndQuantity() {
   const setValue = document.querySelectorAll('.cart__item__content__settings__quantity input');
+
   for (let i = 0; i < setValue.length; i++) {
     setValue[i].addEventListener('change', function () {
       const item = cart[i];
-      const key = item.id + "-" + item.color
+      const key = item.id + "-" + item.color;
       item.qty = setValue[i].value;
       localStorage.setItem(key, JSON.stringify(item));
       displayTotalPrice();
       displayTotalQuantity();
-    })
+    });
   }
 }
 
-
-
-deleteItem();
-// Efface un item du panier
+// Remove an item from the cart
 function deleteItem() {
   const deleteItem = document.querySelectorAll('.deleteItem');
+
   for (let i = 0; i < deleteItem.length; i++) {
     deleteItem[i].addEventListener('click', function () {
       const item = cart[i];
-      const key = item.id + "-" + item.color
+      const key = item.id + "-" + item.color;
       cart.splice(i, 1);
       localStorage.removeItem(key);
-      displayCartHTML();
+      displayCartHTML(); // Update the displayed cart after deletion
       storageToCart();
       displayTotalPrice();
       displayTotalQuantity();
       location.reload();
-      console.log(cart);
-    })
+    });
   }
 }
 
@@ -228,6 +218,7 @@ function checkPrenom(firstName) {
       throw new Error('Nom is not valid');
     }
   }
+
 
 // Vérifie que l'email est valide
 function checkEmail(email) {

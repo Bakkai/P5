@@ -1,21 +1,28 @@
+import { articles } from './script.js';
 // displayShoppingCard();
 
-const cart = []
+const cart = [];
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const listItems = await articles();
 
-storageToCart();
-//insertion des éléments du localStorage dans l'array cart
-function storageToCart() {
-  const numberOfItems = localStorage.length;
-  console.log(numberOfItems);
-  for (let i = 0; i < numberOfItems; i++) {
-    const item = localStorage.getItem(localStorage.key(i));
-    const itemObject = JSON.parse(item);
-    cart.push(itemObject);
+  storageToCart();
+  //insertion des éléments du localStorage dans l'array cart
+  function storageToCart() {
+    const numberOfItems = localStorage.length;
+  
+    for (let i = 0; i < numberOfItems; i++) {
+      const item = localStorage.getItem(localStorage.key(i));
+      const itemObject = JSON.parse(item);
+      const itemSource = listItems.find(
+        (element) => element._id === itemObject.id
+      );
+  
+      itemObject.price = itemSource.price;
+      cart.push(itemObject);
+    }
   }
-  console.log(cart);
-
-}
+  
 
 
 displayCartHTML();
@@ -26,7 +33,6 @@ function displayCartHTML() {
 
   for (let i = 0; i < cart.length; i++) {
     const item = cart[i];
-    console.log('Item in cart:', item); // Add this line for debugging
     const cartItem = document.createElement('div');
     cartItem.innerHTML = `
       <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
@@ -50,13 +56,16 @@ function displayCartHTML() {
           </div>
         </div>
       </article>
-    `;
+    `
     cartItems.appendChild(cartItem);
   }
 
   // Add event listeners after rendering cart items
   updatePriceAndQuantity();
   deleteItem();
+  displayTotalPrice();
+  displayTotalQuantity ();
+
 }
 
 
@@ -228,4 +237,3 @@ function checkEmail(email) {
     throw new Error('Email is not valid');
   }
 }
-

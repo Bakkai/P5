@@ -5,7 +5,6 @@ const cart = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   const listItems = await articles();
-
   storageToCart();
   //insertion des éléments du localStorage dans l'array cart
   function storageToCart() {
@@ -237,3 +236,4 @@ function checkEmail(email) {
     throw new Error('Email is not valid');
   }
 }
+})
